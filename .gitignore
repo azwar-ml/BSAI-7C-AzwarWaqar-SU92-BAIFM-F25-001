@@ -1,4 +1,46 @@
-venv/
-__pycache__/
-*.pyc
+# Jupyter
 .ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Teacher-only material — never commit to the student repository
+*TEACHER*
+*_KEY*
+*ANSWER*
+solution/
+reveals.py
+make_task.py
+teacher_key.py
+
+# Student marks — never commit to a student-facing repository
+*[Mm]arks*.xlsx
+*[Gg]rades*.xlsx
+
+# Student output from the week 3 starters
+week3/assignments/partD_figure.png
+week3/assignments/partC_palette.png
+week3/assignments/popout_panels.png
+
+# Student output from the week 5 tasks
+week5/assignments/_geolib_selfcheck.png
+week5/assignments/partD_bubble.png
+week5/assignments/partD_pcp.png
+week5/assignments/partD_choropleth.png
+week5/assignments/partC_reader_results.csv
+week5/assignments/partF_map.png
+
+# Student output from the week 4 starters
+week4/assignments/partD_figure.png
+week4/assignments/partF_cycle.png
+week4/assignments/stimulus_pie.png
+week4/assignments/stimulus_bars.png
+week4/assignments/pie_ranking_results.csv
+week4/assignments/_tslib_selfcheck.png

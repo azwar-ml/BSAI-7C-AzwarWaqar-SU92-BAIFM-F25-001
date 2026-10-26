@@ -13,6 +13,9 @@ committed **with their outputs**, so you can read the whole lecture on GitHub wi
 |---|---|---|
 | **1** | Why visualization, and choosing the right chart | [`week1/`](week1/) |
 | **2** | Visual perception — preattentive attributes, Gestalt, cognitive load | [`week2/`](week2/) |
+| **3** | Matplotlib & Seaborn — building figures, and nine charts that are wrong | [`week3/`](week3/) |
+| **4** | Time-series, proportions & hierarchies — windows, shares and treemaps | [`week4/`](week4/) |
+| **5** | Multivariate data & geospatial — channels, parallel coordinates, choropleths | [`week5/`](week5/) |
 
 More weeks will be added here as the course runs.
 
@@ -36,12 +39,24 @@ python3 download_assignment_data.py
 # Week 2 assignments
 cd ../../week2/assignments
 python3 download_assignment_data.py
+
+# Week 3 assignments — data is already committed, nothing to download
+cd ../../week3/assignments
+python3 vizlib.py          # self-check that the toolkit runs
+
+# Week 4 assignments — also committed, nothing to download
+cd ../../week4/assignments
+python3 tslib.py           # self-check that the toolkit runs
+
+# Week 5 assignments — committed too, and no GIS install needed
+cd ../../week5/assignments
+python3 geolib.py          # self-check that the toolkit runs
 ```
 
 **Requirements:** Python 3.9+, and:
 
 ```bash
-pip install pandas numpy matplotlib seaborn jupyter ipykernel
+pip install pandas numpy matplotlib seaborn scipy statsmodels squarify scikit-learn jupyter ipykernel
 ```
 
 > No data files are committed that you cannot re-download. Each folder has a `download_*.py` script that
@@ -187,3 +202,203 @@ condition. Task 1 makes the student measure that slope themselves.
 
 Full briefs, the rules and the marking guide are in
 [`week2/assignments/TASKS.md`](week2/assignments/TASKS.md).
+
+---
+
+## Week 3 — Matplotlib & Seaborn
+
+**CLO1 — Use Python for basic static chart generation.**
+**CLO2 — Create statistical charts for data exploration.**
+
+Week 3 is assignment-only: five parts in
+[`week3/assignments/TASKS.md`](week3/assignments/TASKS.md), plus a bonus that
+rebuilds the Week 1 perception experiment in code.
+
+| Part | Topic | Marks |
+|---|---|---|
+| A | Rebuild nine charts that are wrong, then take them apart | 36 |
+| B | Lie Factor, computed in Python instead of measured with a ruler | 15 |
+| C | Prove a palette is colour-blind safe, with the failure shown | 9 |
+| D | **Hands-on:** the 2×2 clinical review figure, exported at 300 dpi | 25 |
+| E | One page of written justification, including the ethics clause | 15 |
+| bonus | Week 1's preattentive experiment, rebuilt and run on five people | 5 |
+
+### What makes this week different
+
+Students are not handed nine finished charts. They get nine **published claims
+and the recipe each analyst followed**, and rebuild every chart themselves
+before diagnosing it — which turns Part A from a reading exercise into a
+Lecture 5 one. Each case carries a self-check number so they know the rebuild
+is faithful.
+
+Every one of those charts is **arithmetically correct**. Nothing has been
+fiddled. They are still all wrong — and in most of them the obvious objection
+(*"correlation is not causation"*, *"the axis is truncated"*, *"n is too
+small"*) is either irrelevant or ruled out by the recipe itself.
+
+Scepticism is cheap and generic. The marks are for naming the mechanism and
+proving it from the data, which means opening the CSV and computing something.
+Three of the nine cases hand the student a column that is **not on the chart**,
+specifically so a plausible hypothesis can be tested and rejected.
+
+Between them the nine cases cover the main ways a chart can be arithmetically
+correct and still wrong: a third variable that reverses a comparison, a
+denominator that moves, data that goes missing in a pattern, summary statistics
+that do not constrain shape, a screening matrix read as a result, an axis
+convention that manufactures an event, and parameters that quietly decide what
+a distribution looks like.
+
+Which case is which is not stated anywhere a student can read. Finding that
+out is the assignment.
+
+### The toolkit — [`week3/assignments/vizlib.py`](week3/assignments/vizlib.py)
+
+Short enough to read in one sitting, and students are expected to:
+
+| Function | What it does |
+|---|---|
+| `lie_factor(...)` | Tufte's Lie Factor, with the `ink_dimension` argument that is the whole of two cases |
+| `simulate_cvd(...)` | Machado (2009) matrices in linear RGB — takes hex codes **or** a rendered figure |
+| `delta_e` / `worst_pair` | Perceptual distance in OKLab, so "is this palette safe" is a number |
+| `match_stats(...)` | Forces a dataset to exact mean, SD and r while keeping its shape |
+
+`python3 vizlib.py` self-tests. Its worked Lie Factor examples are deliberately
+**not** the ones in the Part B audit.
+
+### The palette
+
+A three-slot Okabe–Ito subset: `#0072B2` · `#D55E00` · `#009E73`. It passes
+every check on a light surface with **all pairs** compared — worst ΔE 11.0
+under deuteranopia, 18.7 under normal vision, all three above 3:1 contrast.
+
+A fourth hue (`#CC79A7`) is provided for the cases that need one. It drops the
+CVD margin to ΔE 7.5, so any chart using it must carry direct labels or a table
+view. Part C makes students find that themselves rather than take it on trust.
+
+### Teacher material
+
+Model answers, the generator scripts and the reveal figures are **not** in this
+repository. `.gitignore` blocks `*TEACHER*`, `*_KEY*`, `*ANSWER*`, `solution/`,
+`make_task.py`, `reveals.py` and `teacher_key.py` from ever being committed here.
+
+---
+
+## Week 4 — Time-series, proportions & hierarchies
+
+Full brief in [`week4/assignments/TASKS.md`](week4/assignments/TASKS.md);
+week notes in [`week4/README.md`](week4/README.md).
+
+| Lecture | Topic | Outcome | CLO |
+|---|---|---|---|
+| **L7** | Time series — resolution, gaps, baselines, rolling means, decomposition | Design time-series visualizations that expose trend, seasonality and cycles | CLO2 |
+| **L8** | Proportions and hierarchies — pie vs bar, stacked forms, treemaps, sunbursts | Compare part-to-whole strategies and construct hierarchical visualizations | CLO2 |
+
+| Part | Covers | Marks |
+|---|---|---|
+| A | Rebuild nine charts, then diagnose them | 36 |
+| B | Smoothing, windows and panel shape, computed | 15 |
+| C | Part-to-whole legality, and the pie-ranking experiment | 9 |
+| D | **Hands-on:** the 2x2 e-commerce review figure at 300 dpi | 25 |
+| E | One page of written justification, with the window clause | 15 |
+| F | *Bonus, marked separately* — Week 1's `flights.csv` task, on data students find | 5 |
+
+### What makes this week different
+
+Week 3's nine charts were broken by a **drawing** decision, so they could be
+found by looking. Week 4's nine are broken **before any drawing happens** — by
+a parse, a resample, a rolling window, a denominator. The only way in is to
+open the file and compute something.
+
+One mechanism per deck idea: a date column sorted as text; plotting by row
+number so unrecorded days vanish; a *level* resampled with `sum()`; a trailing
+mean's turn arriving half a window late; a window that starts at the seasonal
+peak; an incomplete final period; volatility leaking up through a stacked
+area's moving baseline; parts that are not exclusive; and a rising share of a
+falling total.
+
+Two of the nine are *incomplete* rather than wrong — the redesign is the same
+chart with something else beside it, which is the argument of Lecture 8.
+
+### The toolkit — [`week4/assignments/tslib.py`](week4/assignments/tslib.py)
+
+`tslib` **imports Week 3's `vizlib` unchanged** rather than reimplementing it,
+so a Week 4 figure inherits the Week 3 palette and export rules by
+construction.
+
+| Function | What it does |
+|---|---|
+| `audit_index(...)` | Slide 10's six checks in one call — dtype, sort order, duplicates, gaps, partial tail |
+| `window_report(...)` | What each rolling window costs: variation removed, periods lost |
+| `lag_at_turn(...)` | How late a trailing mean finds a turning point, against the half-window |
+| `banked_figsize(...)` | Cleveland's banking-to-45&deg; rule, computed instead of guessed |
+| `exclusivity_check(...)` | Slide 32's first test, before any share is drawn |
+| `rollup_other(...)` | An `Other` bucket that hands back a note declaring what it hides |
+| `treemap` / `sunburst` / `cycle_plot` | Three hierarchy and seasonality marks, matplotlib only |
+
+`python3 tslib.py` self-tests, including an assertion that the measured
+trailing-mean lag matches the half-window.
+
+### Carried forward
+
+Week 1's open `flights.csv` question — *is the seasonality growing, or is the
+business?* — becomes Part F, on data students source themselves. Week 2's
+channel ranking does triple duty: it is why bars beat pies in Part C and why a
+treemap must print its values in Part D. Week 3's parameter-declaration and
+row-removal rules extend to the window length and the `Other` bucket.
+
+`TASKS.md` opens with a table mapping every Week 1-3 idea to where it returns.
+
+### Plotly is optional
+
+`px.treemap`, `px.sunburst` and `px.icicle` are previewed in the deck and
+arrive properly in Week 6, when they become interactive. Everything in Week 4
+is markable in matplotlib, so nobody is blocked on an install.
+
+---
+
+## Week 5 — Multivariate data & geospatial visualization
+
+Full brief in [`week5/assignments/TASKS.md`](week5/assignments/TASKS.md);
+week notes in [`week5/README.md`](week5/README.md).
+
+| Part | Covers | Marks |
+|---|---|---|
+| A | Rebuild nine charts, then diagnose them | 36 |
+| B | The five channel and spatial decisions, computed | 15 |
+| C | The two-map activity, run on five real readers | 9 |
+| D | The three health figures — bubble, parallel coordinates, choropleth | 25 |
+| E | One page of written justification | 15 |
+| F | *Bonus, separate* — a normalized map on data you find | 5 |
+
+### What is different this week
+
+Week 3's nine broken charts were broken by a **drawing** decision and you
+could find them by looking. Week 4's nine were broken **upstream of the
+pixels** — a parse, a resample, a window, a denominator.
+
+Week 5's nine are broken by **the encoding or the geography**. The arithmetic
+is right, the parse is right, and six of the nine would pass a design review.
+The lie is in which channel carried which variable, or in which boundaries
+were used to carve the land up — a radius standing in for an area, five
+quantile classes painted over a 7% spread, a hotspot that is nine cases in
+22,000 people, or a count map that correlates with population at **+0.986**.
+
+### The toolkit — [`week5/assignments/geolib.py`](week5/assignments/geolib.py)
+
+Built on `vizlib` the same way `tslib` is, so a Week 5 figure inherits the
+Week 3 palette and export rules by construction. It carries the projections,
+an exact Jenks classifier, polygon drawing, parallel coordinates with
+brushing, and Poisson funnel limits.
+
+**It needs no GIS stack.** Boundaries ship as plain GeoJSON and are read with
+the standard-library `json` module, so nobody is blocked on a `geopandas`
+install — the same reason `tslib` shipped its own treemap. Students who have
+`geopandas` and `mapclassify` may use them instead and say so.
+
+### Carried forward
+
+Week 2's channel ranking stops being a ranking and becomes a **budget**: two
+positions, then area, then lightness, then hue, spent in the order the reader
+needs to compare. Week 2's "experiments on real readers" returns as Part C.
+Week 4's denominator lesson becomes the most load-bearing idea of the week —
+it is case 2, it is Part C, and it is 8 of Part D's 25 marks.
