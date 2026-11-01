@@ -299,15 +299,16 @@ def class_of(values, edges):
 
 
 # ================================================================== map marks
-def choropleth(ax, feats, values, scheme="natural", k=5, cmap=None,
+def choropleth(geojson, values, ax=None, scheme="natural", k=5, cmap=None,
                projection="equal_area", edgecolor="white", lw=0.35,
                legend=True, legend_title="", fmt="{:,.0f}",
                legend_loc="upper left", legend_anchor=(1.0, 1.0)):
     """
     Colour each polygon by one number about it. Returns the class edges.
 
+    `geojson` is the feature collection returned by `read_geojson()`.
     `values` is a dict keyed by the feature's `code`, or a sequence in the
-    same order as `feats`. The projection defaults to equal-area because
+    same order as the features. The projection defaults to equal-area because
     colouring an area with a quantity makes area the encoding channel, and
     an area-distorting projection distorts the chart itself. Slide 34.
     """
@@ -315,6 +316,9 @@ def choropleth(ax, feats, values, scheme="natural", k=5, cmap=None,
     from matplotlib.patches import Polygon as MplPolygon
     from matplotlib.collections import PatchCollection
 
+    feats = geojson
+    if ax is None:
+        raise ValueError("choropleth requires an Axes object via ax")
     if isinstance(values, dict):
         vals = np.array([values[f["code"]] for f in feats], dtype=float)
     else:
@@ -613,8 +617,14 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     style_defaults()
     fig, axs = plt.subplots(1, 3, figsize=(13, 4.2))
-    e = choropleth(axs[0], feats, dict(zip(df.code, rate)), "natural", 5,
-                   legend_title="Cases per 100k")
+    e = choropleth(
+        geojson=feats,
+        values=dict(zip(df.code, rate)),
+        ax=axs[0],
+        scheme="natural",
+        k=5,
+        legend_title="Cases per 100k",
+    )
     axs[0].set_title("choropleth — natural breaks", fontsize=10)
     outlines(axs[1], feats)
     prop_symbols(axs[1], feats, dict(zip(df.code, df.cases)), max_pt=420)
