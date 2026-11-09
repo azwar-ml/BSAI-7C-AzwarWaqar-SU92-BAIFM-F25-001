@@ -35,6 +35,9 @@ tells you whether it is installed, and nothing here needs it.
 """
 from __future__ import annotations
 
+from pathlib import Path
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -46,6 +49,15 @@ __all__ = [
     "channel_conflicts", "dashboard_grid", "kpi_tile", "callout",
     "shared_scale", "select_in_rect", "LinkedBrush", "has_plotly",
 ]
+
+
+def _numeric_values(df: pd.DataFrame, columns) -> None:
+    """Reject unknown or non-finite measurements before aggregation."""
+    for column in columns:
+        if not pd.api.types.is_numeric_dtype(df[column]):
+            raise ValueError(f"{column!r} must contain numeric measurements")
+        if not np.isfinite(df[column].to_numpy(dtype=float, na_value=np.nan)).all():
+            raise ValueError(f"{column!r} contains missing or non-finite measurements")
 
 
 def has_plotly() -> bool:
@@ -112,12 +124,29 @@ def rate_decomposition(before: pd.DataFrame, after: pd.DataFrame,
     def _agg(df, label):
         if not {group, num, den} <= set(df.columns):
             raise ValueError(f"{label}: needs columns {group!r}, {num!r}, {den!r}")
-        g = df.groupby(group, dropna=False)[[num, den]].sum()
+        if df[group].isna().any():
+            raise ValueError(f"{label}: missing group labels")
+        # Entirely missing returns are unknown, not zero. Numerator and
+        # denominator must always refer to the same observations.
+        values = df[[num, den]]
+        if (values.isna().any(axis=1) & ~values.isna().all(axis=1)).any():
+            raise ValueError(f"{label}: numerator and denominator have unpaired missing values")
+        valid = df.dropna(subset=[num, den])
+        if valid.empty:
+            raise ValueError(f"{label}: no usable observations")
+        _numeric_values(valid, [num, den])
+        if (valid[[num, den]] < 0).any().any():
+            raise ValueError(f"{label}: counts must be nonnegative")
+        g = valid.groupby(group, observed=True, dropna=False)[[num, den]].sum()
+        if not df[group].isin(g.index).all():
+            raise ValueError(f"{label}: a group has no usable observations")
         if (g[den] <= 0).any():
             bad = g.index[g[den] <= 0].tolist()
             raise ValueError(f"{label}: denominator is zero or negative for {bad}")
         return g
 
+    if not np.isfinite(per) or per <= 0:
+        raise ValueError("per must be finite and positive")
     a, b = _agg(before, "before"), _agg(after, "after")
     only_a, only_b = sorted(set(a.index) - set(b.index)), sorted(set(b.index) - set(a.index))
     if only_a or only_b:
@@ -185,12 +214,19 @@ def overlap_factor(df: pd.DataFrame, unit: str, parts: str, value: str,
     for c in (unit, parts, value):
         if c not in df.columns:
             raise ValueError(f"no column {c!r}")
+    if df.empty or df[unit].isna().any():
+        raise ValueError("units must be nonempty and have nonmissing identifiers")
+    if not sep:
+        raise ValueError("sep must not be empty")
+    _numeric_values(df, [value])
+    if (df[value] < 0).any():
+        raise ValueError(f"{value!r} must be nonnegative")
     if df[unit].duplicated().any():
         dup = df.loc[df[unit].duplicated(), unit].unique().tolist()
         raise ValueError(f"{unit!r} is not unique — repeated: {dup[:5]}")
 
     lists = df[parts].fillna("").astype(str).apply(
-        lambda s: [p.strip() for p in s.split(sep) if p.strip()])
+        lambda s: list(dict.fromkeys(p.strip() for p in s.split(sep) if p.strip())))
     n_parts = lists.apply(len)
     if (n_parts == 0).any():
         raise ValueError(f"{int((n_parts == 0).sum())} rows have no category in "
@@ -251,12 +287,17 @@ def drilldown_check(df: pd.DataFrame, level: str, value: str,
         worst_abs, worst_rel_pct    the largest disagreement found
         reconciles                  True when every parent reconciles
     """
+    within = [within] if isinstance(within, str) else list(within)
+    if not np.isfinite(tol) or tol < 0:
+        raise ValueError("tol must be finite and nonnegative")
     for c in (level, value, *within):
         if c not in df.columns:
             raise ValueError(f"no column {c!r}")
-    within = list(within)
+    _numeric_values(df, [value])
+    if df[level].isna().any():
+        raise ValueError(f"{level!r} contains missing category labels")
 
-    is_total = (df[level].astype(str).str.strip() == total_label) if total_label else \
+    is_total = (df[level].astype(str).str.strip() == total_label) if total_label is not None else \
         pd.Series(False, index=df.index)
     parts, totals = df[~is_total], df[is_total]
 
@@ -266,28 +307,30 @@ def drilldown_check(df: pd.DataFrame, level: str, value: str,
            "sum_parts": sum_parts, "sum_all": sum_all,
            "sum_all_pct": (sum_all / sum_parts * 100.0) if sum_parts else float("nan")}
 
-    if total_label is None or not len(totals):
+    if total_label is None:
         out.update(mismatches=pd.DataFrame(), worst_abs=0.0,
                    worst_rel_pct=0.0, reconciles=True)
         return out
 
-    key = within or [level]
-    p = parts.groupby(within, dropna=False)[value].sum() if within else \
+    p = parts.groupby(within, observed=True, dropna=False)[value].sum() if within else \
         pd.Series({"_all": sum_parts})
-    t = totals.groupby(within, dropna=False)[value].sum() if within else \
-        pd.Series({"_all": float(totals[value].sum())})
+    t = totals.groupby(within, observed=True, dropna=False)[value].sum() if within else \
+        pd.Series({"_all": float(totals[value].sum())}) if len(totals) else pd.Series(dtype=float)
     comp = pd.DataFrame({"parts": p, "declared": t})
-    if comp.isna().any().any():
-        missing = comp[comp.isna().any(axis=1)]
-        comp = comp.fillna(0.0)
+    missing = comp.isna().any(axis=1)
+    counts = totals.groupby(within, observed=True, dropna=False).size() if within else \
+        pd.Series({"_all": len(totals)})
+    duplicate_totals = counts.reindex(comp.index, fill_value=0).gt(1)
     comp["diff"] = comp.parts - comp.declared
-    comp["rel_pct"] = np.where(comp.declared != 0,
-                               comp["diff"] / comp.declared * 100.0, np.nan)
-    bad = comp[comp["diff"].abs() > tol].sort_values("diff", key=abs, ascending=False)
+    comp["rel_pct"] = comp["diff"].div(comp.declared.where(comp.declared.ne(0))).mul(100)
+    comp["missing_parent_or_parts"] = missing
+    comp["duplicate_totals"] = duplicate_totals
+    bad = comp[missing | duplicate_totals | comp["diff"].abs().gt(tol)].sort_values("diff", key=abs, ascending=False)
+    relative = comp["rel_pct"].abs().dropna()
     out.update(mismatches=bad,
                worst_abs=float(comp["diff"].abs().max()),
-               worst_rel_pct=float(np.nanmax(np.abs(comp.rel_pct))) if len(comp) else 0.0,
-               reconciles=bool(len(bad) == 0))
+               worst_rel_pct=float(relative.max()) if len(relative) else 0.0,
+               reconciles=bool(len(comp) > 0 and len(bad) == 0))
     return out
 
 
@@ -442,6 +485,8 @@ def kpi_tile(ax, label: str, value, delta=None, note: str | None = None,
     and in the muted grey: it carries shape only. If a reader needs to read
     values off it, it wants to be a chart.
     """
+    if good not in {"up", "down", "neutral"}:
+        raise ValueError("good must be 'up', 'down', or 'neutral'")
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -453,7 +498,9 @@ def kpi_tile(ax, label: str, value, delta=None, note: str | None = None,
             fontweight="bold", color=PALETTE["ink"])
 
     if delta is not None:
-        if good == "neutral" or delta == 0:
+        if not isinstance(delta, str) and not np.isfinite(delta):
+            raise ValueError("delta must be finite, a display string, or None")
+        if isinstance(delta, str) or good == "neutral" or delta == 0:
             colour, arrow = PALETTE["ink_soft"], "→"
         else:
             improving = (delta > 0) if good == "up" else (delta < 0)
@@ -468,11 +515,14 @@ def kpi_tile(ax, label: str, value, delta=None, note: str | None = None,
                 color=PALETTE["ink_soft"], wrap=True)
 
     if series is not None:
-        s = np.asarray(pd.Series(series).dropna(), dtype=float)
-        if s.size > 1:
+        s = pd.Series(series, dtype=float).to_numpy(na_value=np.nan)
+        s[~np.isfinite(s)] = np.nan
+        finite = s[np.isfinite(s)]
+        if s.size > 1 and finite.size:
             x = np.linspace(0.0, 1.0, s.size)
-            lo, hi = float(s.min()), float(s.max())
-            y = 0.04 + 0.10 * ((s - lo) / (hi - lo) if hi > lo else np.zeros_like(s))
+            lo, hi = float(finite.min()), float(finite.max())
+            normalized = (s - lo) / (hi - lo) if hi > lo else np.where(np.isfinite(s), 0.0, np.nan)
+            y = 0.04 + 0.10 * normalized
             ax.plot(x, y, lw=1.2, color=PALETTE["muted"], solid_capstyle="round")
 
 
@@ -519,20 +569,30 @@ def shared_scale(axes, which: str = "y", from_zero: bool = False,
     Returns `(lo, hi, note)` and sets the limits on every axis.
     """
     axes = list(axes.values()) if isinstance(axes, dict) else list(axes)
+    if not axes:
+        raise ValueError("at least one axis is required")
+    if which not in {"x", "y"}:
+        raise ValueError("which must be 'x' or 'y'")
+    if not np.isfinite(pad) or pad < 0:
+        raise ValueError("pad must be finite and nonnegative")
     lo, hi = np.inf, -np.inf
+    inverted = []
     for ax in axes:
         a, b = (ax.get_ylim() if which == "y" else ax.get_xlim())
-        lo, hi = min(lo, a), max(hi, b)
+        inverted.append(a > b)
+        lo, hi = min(lo, a, b), max(hi, a, b)
     if from_zero:
         lo = min(lo, 0.0)
+        hi = max(hi, 0.0)
     span = (hi - lo) or 1.0
-    hi = hi + pad * span
-    if not from_zero:
+    if not from_zero or hi != 0:
+        hi = hi + pad * span
+    if not from_zero or lo != 0:
         lo = lo - pad * span
-    for ax in axes:
-        (ax.set_ylim if which == "y" else ax.set_xlim)(lo, hi)
+    for ax, reverse in zip(axes, inverted):
+        (ax.set_ylim if which == "y" else ax.set_xlim)(*( (hi, lo) if reverse else (lo, hi)))
     note = (f"all {len(axes)} panels share one {which}-axis, "
-            f"{lo:,.0f} to {hi:,.0f}" + (" (from zero)" if from_zero else ""))
+            f"{lo:,.0f} to {hi:,.0f}" + (" (includes zero)" if from_zero else ""))
     return lo, hi, note
 
 
@@ -544,9 +604,11 @@ def select_in_rect(df: pd.DataFrame, x: str, y: str, rect) -> pd.Series:
     order. Returns a boolean Series, inclusive of the edges.
     """
     x0, y0, x1, y1 = rect
+    if not np.isfinite([x0, y0, x1, y1]).all():
+        raise ValueError("rectangle coordinates must be finite")
     xlo, xhi = sorted((x0, x1))
     ylo, yhi = sorted((y0, y1))
-    return (df[x].between(xlo, xhi)) & (df[y].between(ylo, yhi))
+    return ((df[x].between(xlo, xhi)) & (df[y].between(ylo, yhi))).fillna(False)
 
 
 class LinkedBrush:
@@ -569,17 +631,25 @@ class LinkedBrush:
                  color: str | None = None):
         self.ax, self.df, self.x, self.y = ax, df, x, y
         self.on_select = on_select
+        if not callable(on_select):
+            raise TypeError("on_select must be callable")
+        for column in (x, y):
+            if column not in df.columns:
+                raise ValueError(f"no column {column!r}")
         self.mask = pd.Series(True, index=df.index)
         self.selector = None
+        self._why = None
         try:
+            from matplotlib.backend_bases import MouseButton
             from matplotlib.widgets import RectangleSelector
             self.selector = RectangleSelector(
-                ax, self._on_release, useblit=False, button=[1],
+                ax, self._on_release, useblit=False, button=[MouseButton.LEFT],
                 interactive=True, minspanx=0, minspany=0,
                 props=dict(facecolor=color or PALETTE["series"][0], alpha=0.12,
                            edgecolor=color or PALETTE["series"][0], lw=1.0, fill=True))
-        except Exception as exc:          # headless backend, old matplotlib
+        except (ImportError, TypeError, AttributeError) as exc:
             self._why = exc
+            warnings.warn(f"Interactive selector unavailable: {exc}", RuntimeWarning, stacklevel=2)
 
     def _on_release(self, click, release):
         if None in (click.xdata, click.ydata, release.xdata, release.ydata):
@@ -595,8 +665,16 @@ class LinkedBrush:
     def clear(self) -> pd.Series:
         """Select everything again — the 'reset' a filter must always have."""
         self.mask = pd.Series(True, index=self.df.index)
+        if self.selector is not None:
+            self.selector.clear()
         self.on_select(self.mask)
         return self.mask
+
+    def disconnect(self) -> None:
+        """Release canvas callbacks when the containing view is closed."""
+        if self.selector is not None:
+            self.selector.set_active(False)
+            self.selector.disconnect_events()
 
 
 # ------------------------------------------------------------------ self-test
@@ -741,7 +819,7 @@ if __name__ == "__main__":
     print(f"shared_scale()  {note}")
     assert lo == 0.0 and hi > 0.0
 
-    out = vizlib.save_fig(fig, "_dashlib_selfcheck.png",
+    out = vizlib.save_fig(fig, Path(__file__).with_name("_dashlib_selfcheck.png"),
                           note="dashlib self-test — synthetic numbers, not the Week 7 data")
     plt.close(fig)
     print(f"\nwrote {out} at 300 dpi")

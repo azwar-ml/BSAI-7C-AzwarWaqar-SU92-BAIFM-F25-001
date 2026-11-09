@@ -27,10 +27,12 @@ PASS incorrect meter level sum: 574845315.3000001 (expected 574845315, tolerance
 PASS generation change pct: -5.028171659098257 (expected -5, tolerance 0.05)
 PASS solar MWh change pct: 82.12876902130562 (expected 82.1, tolerance 0.05)
 Solar share endpoints: [4.141276876885031, 7.941783083885675]
-WINDOW SENSITIVITY    window    raw_sd  smoothed_sd  variation_removed_pct  periods_lost_each_end
-0       7  406.4087     402.1638                    1.0                      3
-1      28  406.4087     398.3795                    2.0                     14
-2      91  406.4087     365.8915                   10.0                     45
+WINDOW SENSITIVITY    window  ...  periods_lost_each_end
+0       7  ...                      3
+1      28  ...                     14
+2      91  ...                     45
+
+[3 rows x 5 columns]
 Moving-average filter 7 days: DC gain=1; first zero cycles/day= 0.14285714285714285 ; full-window required, gaps never bridged
 Moving-average filter 28 days: DC gain=1; first zero cycles/day= 0.03571428571428571 ; full-window required, gaps never bridged
 Moving-average filter 91 days: DC gain=1; first zero cycles/day= 0.01098901098901099 ; full-window required, gaps never bridged
