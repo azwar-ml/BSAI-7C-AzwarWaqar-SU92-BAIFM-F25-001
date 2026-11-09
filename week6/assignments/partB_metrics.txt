@@ -1,0 +1,36 @@
+PASS districts: 24 (expected 24, tolerance 0)
+PASS population: 57857000 (expected 57857000, tolerance 0)
+PASS households: 8908512 (expected 8908512, tolerance 0)
+PASS top-list intersection: 1 (expected 1, tolerance 0)
+Raw-count top three: ['D17', 'D13', 'D24']
+Rate top three: ['D12', 'D11', 'D13']
+PASS count-population correlation: 0.9912696575727908 (expected 0.991, tolerance 0.0005)
+PASS rate-population correlation: 0.1753387896597609 (expected 0.175, tolerance 0.0005)
+Rate range 30.426276353068197 50.874826088789575 pooled 43.6525201964144
+PASS top-five population share: 59.88039476640683 (expected 59.9, tolerance 0.05)
+PASS top-five area share: 12.593402078172483 (expected 12.6, tolerance 0.05)
+PASS interruptions: 388879 (expected 388879, tolerance 0)
+PASS persons per household min: 5.7 (expected 5.7, tolerance 0.005)
+PASS persons per household max: 7.359990976256275 (expected 7.36, tolerance 0.005)
+PASS electrification min: 66.6 (expected 66.6, tolerance 0.001)
+PASS electrification max: 90.3 (expected 90.3, tolerance 0.001)
+PASS mean duration min: 77.3532616921447 (expected 77, tolerance 0.5)
+PASS mean duration max: 213.74119530416223 (expected 214, tolerance 0.5)
+PASS electrification missing: 3 (expected 3, tolerance 0)
+PASS duration usable: 22 (expected 22, tolerance 0)
+PASS peak unusable: 46 (expected 46, tolerance 0)
+PASS meter resets: 1 (expected 1, tolerance 0)
+PASS brief June anchor (June 1 to July 1 readings): 1200239.4000000022 (expected 1200239, tolerance 1)
+Dictionary end-of-day June energy (May 31 to June 30): 1199206.6999999993
+Known consecutive-day June energy only: 1117416.0999999978 ; one two-day interval excluded from daily allocations
+PASS incorrect meter level sum: 574845315.3000001 (expected 574845315, tolerance 1)
+PASS generation change pct: -5.028171659098257 (expected -5, tolerance 0.05)
+PASS solar MWh change pct: 82.12876902130562 (expected 82.1, tolerance 0.05)
+Solar share endpoints: [4.141276876885031, 7.941783083885675]
+WINDOW SENSITIVITY    window    raw_sd  smoothed_sd  variation_removed_pct  periods_lost_each_end
+0       7  406.4087     402.1638                    1.0                      3
+1      28  406.4087     398.3795                    2.0                     14
+2      91  406.4087     365.8915                   10.0                     45
+Moving-average filter 7 days: DC gain=1; first zero cycles/day= 0.14285714285714285 ; full-window required, gaps never bridged
+Moving-average filter 28 days: DC gain=1; first zero cycles/day= 0.03571428571428571 ; full-window required, gaps never bridged
+Moving-average filter 91 days: DC gain=1; first zero cycles/day= 0.01098901098901099 ; full-window required, gaps never bridged

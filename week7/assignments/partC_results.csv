@@ -1,0 +1,4 @@
+check,passed,kind
+unique_date_category,True,automated; not a reader trial
+all_modes_decline_aggregate_rises,True,automated; not a reader trial
+selection_contains_all_routes,True,automated; not a reader trial

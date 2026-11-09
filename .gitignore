@@ -70,3 +70,13 @@ week7/assignments/partC_default.png
 week7/assignments/partC_contract.md
 week7/assignments/partD_screen.png
 week7/assignments/partE_note.md
+
+# Completed Week 6/7 submissions: retain reproducible deliverables.
+!week6/assignments/part*
+!week7/assignments/part*
+!week6/assignments/clean/
+!week6/assignments/clean/**
+!week7/assignments/clean/
+!week7/assignments/clean/**
+/tmp/
+**/run_*.log

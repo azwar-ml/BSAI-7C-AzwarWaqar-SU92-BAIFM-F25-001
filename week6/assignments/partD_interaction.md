@@ -1,0 +1,1 @@
+Hover exposes a dated zone peak and zoom isolates demand episodes that a static chart cannot resolve. A reader could cherry-pick a short interval or sum peak MW; axis wording, missing-line gaps and a resettable date range discourage those errors.

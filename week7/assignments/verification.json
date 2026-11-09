@@ -1,0 +1,31 @@
+{
+  "week": 7,
+  "python": "3.9.13",
+  "executed": [
+    "selfcheck.py",
+    "partA_process.py",
+    "partA_charts.py",
+    "partB_charts.py",
+    "partB_analysis.py",
+    "partA_dashboard.py",
+    "partC_experiment.py",
+    "partC_interactive.py",
+    "partD_figure.py",
+    "generate_partE_pdf.py",
+    "partD_screen.py",
+    "dashlib.py"
+  ],
+  "raw_sha256": {
+    "data\\DATA_DICTIONARY.md": "b61e1b798d6199b6eac41efad517f2452d2f0a7b79df8747ee67c8c7fe1cf73e",
+    "data\\district_transit.csv": "3a1492d4b6eb04ce35851c70a5b3d61a2ffbd199275d93abd12b3e9d31ebc21e",
+    "data\\fare_revenue.csv": "65eba6d855c38678641469de673c143d44508737398b494b376dac0763103342",
+    "data\\regions.geojson": "ee83359b52a5cde4d109aca57d2a1712849693c3dc7eb12fca4c9d5f6fc96d48",
+    "data\\ridership_daily.csv": "22ef3dff9023f628d3f1d9a5b2e3759bf04605ecd461474c660b1a7721dd587c",
+    "data\\routes.csv": "50172178c6379b823c731bdc25cb0c16c28dd892e7c81a350a8b3a92ff96de06"
+  },
+  "raw_unchanged": true,
+  "png_dpi": 300,
+  "pdf_pages": 1,
+  "offline_html": "partC_interactive.html",
+  "human_trials": "not performed or claimed"
+}

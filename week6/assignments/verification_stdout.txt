@@ -1,0 +1,188 @@
+>>> selfcheck.py
+Week 6 self-check — run this first, once, and read nothing into the output.
+--------------------------------------------------------------------
+python 3.9.13  pandas 2.3.3  numpy 2.0.2  matplotlib 3.9.4
+vizlib  palette      series ['#0072B2', '#D55E00', '#009E73'], sequential 'Blues'
+tslib   on top of it ['audit_index', 'window_report', 'treemap'] and 17 names
+geolib  on top of it ['breaks', 'choropleth', 'pcp'] and 27 names
+district_grid.csv    readable, 13 columns: code, district, zone, population, households, area_km2, lon, lat, income_pc_usd, electrification_pct, solar_kw_installed, outages, outage_minutes
+grid_daily.csv       readable, 5 columns: date, zone, cumulative_mwh, peak_load_mw, outage_minutes
+generation_mix.csv   readable, 4 columns: month, source, subsource, mwh
+regions.geojson      readable, 24 features
+geolib.choropleth    5 Jenks classes, 16,746–95,678 km², equal-area projection
+vizlib.save_fig      wrote _selfcheck.png at 300 dpi
+--------------------------------------------------------------------
+If that ran, everything in TASKS.md will run. Now open TASKS.md.
+
+
+>>> partA_process.py
+
+RAW district_grid rows 25
+code                    object
+district                object
+zone                    object
+population               int64
+households               int64
+area_km2               float64
+lon                    float64
+lat                    float64
+income_pc_usd            int64
+electrification_pct     object
+solar_kw_installed       int64
+outages                  int64
+outage_minutes           int64
+Numeric ranges and denominator audit:
+          population    households      area_km2        lon        lat  income_pc_usd  solar_kw_installed       outages  outage_minutes
+count  2.500000e+01  2.500000e+01     25.000000  25.000000  25.000000      25.000000        2.500000e+01     25.000000    2.500000e+01
+mean   2.477920e+06  3.737123e+05  41797.708000  70.218848  30.444776    6512.000000        4.698233e+05  16806.360000    2.192149e+06
+std    2.596261e+06  3.969654e+05  23852.992836   2.547083   3.311996    1899.850871        5.736761e+05  17253.455912    2.083714e+06
+min    4.680000e+05  1.820000e+02  16745.700000  66.413300  25.945600    2600.000000        8.200100e+04   3234.000000   -1.000000e+00
+25%    7.830000e+05  1.063860e+05  22025.300000  67.894400  29.046600    5500.000000        1.681960e+05   3748.000000    6.640080e+05
+50%    1.522000e+06  2.371900e+05  40395.600000  70.925600  29.197800    6200.000000        2.597910e+05  11009.000000    1.629198e+06
+75%    1.937000e+06  3.202320e+05  46025.300000  72.567800  32.051700    8150.000000        4.560780e+05  13214.000000    2.509543e+06
+max    1.096600e+07  1.566571e+06  95677.600000  73.528200  35.034500   10550.000000        2.620824e+06  63237.000000    6.765079e+06
+Missing per column: {'code': 0, 'district': 0, 'zone': 0, 'population': 0, 'households': 0, 'area_km2': 0, 'lon': 0, 'lat': 0, 'income_pc_usd': 0, 'electrification_pct': 3, 'solar_kw_installed': 0, 'outages': 0, 'outage_minutes': 0}
+Exact duplicate rows: 0
+
+RAW grid_daily rows 3061
+date               object
+zone               object
+cumulative_mwh    float64
+peak_load_mw      float64
+outage_minutes      int64
+Numeric ranges and denominator audit:
+        cumulative_mwh  peak_load_mw  outage_minutes
+count    3.061000e+03   3061.000000     3061.000000
+mean     1.714930e+07   3497.116335      143.284874
+std      1.155527e+07   2129.722191       90.172470
+min      1.180000e+03     -1.000000        0.000000
+25%      9.477271e+06   1986.800000       75.000000
+50%      1.443265e+07   2871.200000      140.000000
+75%      2.074847e+07   4286.600000      206.000000
+max      6.321073e+07   9917.500000      512.000000
+Missing per column: {'date': 0, 'zone': 0, 'cumulative_mwh': 0, 'peak_load_mw': 0, 'outage_minutes': 0}
+Exact duplicate rows: 12
+
+RAW generation_mix rows 162
+month        object
+source       object
+subsource    object
+mwh           int64
+Numeric ranges and denominator audit:
+                 mwh
+count  1.620000e+02
+mean   2.373412e+06
+std    3.091266e+06
+min    4.461890e+05
+25%    6.428598e+05
+50%    8.448430e+05
+75%    2.469058e+06
+max    1.210590e+07
+Missing per column: {'month': 0, 'source': 0, 'subsource': 0, 'mwh': 0}
+Exact duplicate rows: 0
+Register duplicate keys: 1
+GeoJSON key matches as filed: 24
+Conflicting district duplicate: Drop noncanonical duplicate; retain canonical Kotla; rows affected=1
+Household scale: Multiply household entry by 1000, consistent with register unit; rows affected=1
+Percent suffix: Strip suffix and parse numeric; preserve genuine blanks; rows affected=2
+Duration sentinel: Replace -1 with missing, never zero; rows affected=2
+GeoJSON join: matched 24 unmatched 0
+Clean denominator ranges: {'population': {'min': 468000, 'max': 10966000}, 'households': {'min': 76721, 'max': 1566571}, 'area_km2': {'min': 16745.7, 'max': 95677.6}}
+Mixed date formats: Parse slash dates as DD/MM/YYYY and ISO as YYYY-MM-DD explicitly; rows affected=174
+Exact re-submissions: Keep one identical submission; rows affected=12
+Conflicting daily submissions: One zone-day: retain common meter and average disputed measurements; not a known true value; rows affected=3
+Peak sentinel: Replace with missing; rows affected=46
+Filed rows 3046 span 2025-04-01 00:00:00 2026-09-11 00:00:00 slots 3174 never filed 128
+Missing by category: {'P5': 36, 'P4': 24, 'P2': 21, 'P6': 20, 'P3': 15, 'P1': 12}
+Calendar audit P1 {'dtype_ok': True, 'monotonic': True, 'n_rows': 517, 'n_duplicated': 0, 'n_missing': 12, 'missing_dates': ['2025-04-22 00:00:00', '2025-05-22 00:00:00', '2025-10-24 00:00:00', '2025-12-01 00:00:00', '2025-12-16 00:00:00', '2026-01-02 00:00:00', '2026-01-03 00:00:00', '2026-02-01 00:00:00', '2026-04-22 00:00:00', '2026-06-15 00:00:00', '2026-08-06 00:00:00', '2026-08-26 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Calendar audit P2 {'dtype_ok': True, 'monotonic': True, 'n_rows': 508, 'n_duplicated': 0, 'n_missing': 21, 'missing_dates': ['2025-04-23 00:00:00', '2025-04-26 00:00:00', '2025-05-24 00:00:00', '2025-06-05 00:00:00', '2025-06-26 00:00:00', '2025-07-02 00:00:00', '2025-07-17 00:00:00', '2025-07-26 00:00:00', '2025-10-17 00:00:00', '2025-10-28 00:00:00', '2025-11-27 00:00:00', '2025-12-24 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Calendar audit P3 {'dtype_ok': True, 'monotonic': True, 'n_rows': 514, 'n_duplicated': 0, 'n_missing': 15, 'missing_dates': ['2025-06-07 00:00:00', '2025-06-13 00:00:00', '2025-06-18 00:00:00', '2025-09-26 00:00:00', '2025-10-30 00:00:00', '2025-11-15 00:00:00', '2026-01-18 00:00:00', '2026-02-13 00:00:00', '2026-03-19 00:00:00', '2026-03-20 00:00:00', '2026-05-19 00:00:00', '2026-05-28 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Calendar audit P4 {'dtype_ok': True, 'monotonic': True, 'n_rows': 505, 'n_duplicated': 0, 'n_missing': 24, 'missing_dates': ['2025-04-04 00:00:00', '2025-04-22 00:00:00', '2025-05-12 00:00:00', '2025-05-21 00:00:00', '2025-05-27 00:00:00', '2025-05-30 00:00:00', '2025-06-03 00:00:00', '2025-06-13 00:00:00', '2025-07-01 00:00:00', '2025-08-11 00:00:00', '2025-08-15 00:00:00', '2025-09-05 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Calendar audit P5 {'dtype_ok': True, 'monotonic': True, 'n_rows': 493, 'n_duplicated': 0, 'n_missing': 36, 'missing_dates': ['2025-05-01 00:00:00', '2025-05-10 00:00:00', '2025-05-25 00:00:00', '2025-05-31 00:00:00', '2025-06-21 00:00:00', '2025-07-06 00:00:00', '2025-07-22 00:00:00', '2025-07-27 00:00:00', '2025-07-28 00:00:00', '2025-09-23 00:00:00', '2025-11-15 00:00:00', '2025-12-19 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Calendar audit P6 {'dtype_ok': True, 'monotonic': True, 'n_rows': 509, 'n_duplicated': 0, 'n_missing': 20, 'missing_dates': ['2025-04-04 00:00:00', '2025-04-06 00:00:00', '2025-04-15 00:00:00', '2025-05-11 00:00:00', '2025-05-15 00:00:00', '2025-06-21 00:00:00', '2025-08-30 00:00:00', '2025-09-08 00:00:00', '2025-09-19 00:00:00', '2025-11-03 00:00:00', '2025-11-22 00:00:00', '2025-12-07 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-11 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 11}
+Counter reset: Flag reset interval as unknown; do not sum meter levels or bridge gaps; rows affected=1
+Absent zone-days: Keep absent slots missing; invalidate energy differences spanning gaps; rows affected=128
+Published generation totals: Exclude total rows from composition; retain separate summaries; rows affected=18
+Parts 144 max reconciliation error MWh 2 all-row percent 200.00000104033185
+deutan simulation
+  #0072B2  ->  #3B67B1
+  #D55E00  ->  #9E8C00
+  #009E73  ->  #8A8676
+STATIC CHART PALETTE ['#3B67B1', '#9E8C00', '#8A8676']
+SCREEN MAP PALETTE actually used: ['#d3e4f3', '#9dcae1', '#549fcd', '#1e6db2', '#083a7a']
+deutan simulation
+  #d3e4f3  ->  #DAE0F3
+  #9dcae1  ->  #B5C0E1
+  #549fcd  ->  #7992CC
+  #1e6db2  ->  #3464B1
+  #083a7a  ->  #003779
+SCREEN MAP CVD ['#DAE0F3', '#B5C0E1', '#7992CC', '#3464B1', '#003779']
+SCREEN MAP worst all-pairs CVD distance: 10.007194951794062
+Screen line/bar ink: #0072B2 ; series use styles/text, no categorical hue mapping.
+Raw inputs preserved. Cleaning complete.
+
+
+
+>>> partA_charts.py
+
+
+>>> partB_charts.py
+
+
+>>> partB_analytics.py
+PASS districts: 24 (expected 24, tolerance 0)
+PASS population: 57857000 (expected 57857000, tolerance 0)
+PASS households: 8908512 (expected 8908512, tolerance 0)
+PASS top-list intersection: 1 (expected 1, tolerance 0)
+Raw-count top three: ['D17', 'D13', 'D24']
+Rate top three: ['D12', 'D11', 'D13']
+PASS count-population correlation: 0.9912696575727908 (expected 0.991, tolerance 0.0005)
+PASS rate-population correlation: 0.1753387896597609 (expected 0.175, tolerance 0.0005)
+Rate range 30.426276353068197 50.874826088789575 pooled 43.6525201964144
+PASS top-five population share: 59.88039476640683 (expected 59.9, tolerance 0.05)
+PASS top-five area share: 12.593402078172483 (expected 12.6, tolerance 0.05)
+PASS interruptions: 388879 (expected 388879, tolerance 0)
+PASS persons per household min: 5.7 (expected 5.7, tolerance 0.005)
+PASS persons per household max: 7.359990976256275 (expected 7.36, tolerance 0.005)
+PASS electrification min: 66.6 (expected 66.6, tolerance 0.001)
+PASS electrification max: 90.3 (expected 90.3, tolerance 0.001)
+PASS mean duration min: 77.3532616921447 (expected 77, tolerance 0.5)
+PASS mean duration max: 213.74119530416223 (expected 214, tolerance 0.5)
+PASS electrification missing: 3 (expected 3, tolerance 0)
+PASS duration usable: 22 (expected 22, tolerance 0)
+PASS peak unusable: 46 (expected 46, tolerance 0)
+PASS meter resets: 1 (expected 1, tolerance 0)
+PASS brief June anchor (June 1 to July 1 readings): 1200239.4000000022 (expected 1200239, tolerance 1)
+Dictionary end-of-day June energy (May 31 to June 30): 1199206.6999999993
+Known consecutive-day June energy only: 1117416.0999999978 ; one two-day interval excluded from daily allocations
+PASS incorrect meter level sum: 574845315.3000001 (expected 574845315, tolerance 1)
+PASS generation change pct: -5.028171659098257 (expected -5, tolerance 0.05)
+PASS solar MWh change pct: 82.12876902130562 (expected 82.1, tolerance 0.05)
+Solar share endpoints: [4.141276876885031, 7.941783083885675]
+WINDOW SENSITIVITY    window    raw_sd  smoothed_sd  variation_removed_pct  periods_lost_each_end
+0       7  406.4087     402.1638                    1.0                      3
+1      28  406.4087     398.3795                    2.0                     14
+2      91  406.4087     365.8915                   10.0                     45
+Moving-average filter 7 days: DC gain=1; first zero cycles/day= 0.14285714285714285 ; full-window required, gaps never bridged
+Moving-average filter 28 days: DC gain=1; first zero cycles/day= 0.03571428571428571 ; full-window required, gaps never bridged
+Moving-average filter 91 days: DC gain=1; first zero cycles/day= 0.01098901098901099 ; full-window required, gaps never bridged
+
+
+
+>>> partA_dashboard.py
+PASS interaction state: all-category reset, single-category controls, gaps, date domain
+
+
+>>> partC_experiment.py
+               check  passed                          kind
+unique_date_category    True automated; not a reader trial
+
+
+>>> partC_figure.py
+
+
+>>> partD_figure.py
+
+
+>>> generate_partE_pdf.py
+PASS one-page PDF

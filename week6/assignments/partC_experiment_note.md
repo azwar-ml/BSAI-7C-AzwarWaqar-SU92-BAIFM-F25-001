@@ -1,0 +1,1 @@
+No reader responses were collected or fabricated. Week 6 explicitly requires no reader experiment. Week 7 Task C requires an interaction contract, not participant trials. The CSV contains automated checks only; optional Week 7 F2 (five real readers) is not claimed.

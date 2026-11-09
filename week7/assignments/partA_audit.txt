@@ -1,0 +1,163 @@
+
+RAW district_transit rows 25
+code                    object
+district                object
+population               int64
+households               int64
+area_km2               float64
+lon                    float64
+lat                    float64
+income_pc_usd            int64
+stops                    int64
+road_km                float64
+boardings_annual         int64
+fare_concession_pct    float64
+vehicles_registered      int64
+Numeric ranges and denominator audit:
+          population    households     area_km2        lon        lat  income_pc_usd       stops      road_km  boardings_annual  fare_concession_pct  vehicles_registered
+count  2.500000e+01  2.500000e+01     25.00000  25.000000  25.000000      25.000000    25.00000    25.000000      2.500000e+01            25.000000            25.000000
+mean   2.429880e+06  3.728485e+05  41090.18400  70.219784  30.554836    6810.000000   645.12000  1804.988000      3.629920e+07            25.025600        177415.440000
+std    2.576204e+06  3.884761e+05  24804.80711   2.547986   3.309314    2341.073472   821.04427  1089.490758      5.079582e+07            11.887614        210680.658054
+min    4.680000e+05  7.672100e+04   1180.00000  66.413300  25.945600    2600.000000    35.00000    -1.000000      1.455100e+04             0.326000         34419.000000
+25%    7.830000e+05  1.231830e+05  22025.30000  67.894400  29.046600    5500.000000   163.00000  1261.800000      4.636591e+06            22.400000         58573.000000
+50%    1.522000e+06  2.371900e+05  40395.60000  70.925600  31.798100    6700.000000   252.00000  1685.800000      1.422910e+07            29.400000         94064.000000
+75%    1.937000e+06  3.202320e+05  46025.30000  72.567800  32.051700    8150.000000   837.00000  2291.100000      4.399014e+07            31.500000        198299.000000
+max    1.096600e+07  1.566571e+06  95677.60000  73.528200  35.034500   13400.000000  2963.00000  4586.000000      1.774201e+08            38.500000        951008.000000
+Missing per column: {'code': 0, 'district': 0, 'population': 0, 'households': 0, 'area_km2': 0, 'lon': 0, 'lat': 0, 'income_pc_usd': 0, 'stops': 0, 'road_km': 0, 'boardings_annual': 0, 'fare_concession_pct': 0, 'vehicles_registered': 0}
+Exact duplicate rows: 0
+
+RAW routes rows 36
+route_id                 object
+mode                     object
+corridor                 object
+length_km               float64
+stops                     int64
+fleet                     int64
+districts_served         object
+boardings_annual          int64
+punctuality_pct         float64
+crowding_index          float64
+cost_recovery_pct       float64
+subsidy_pkr_per_trip    float64
+Numeric ranges and denominator audit:
+        length_km      stops      fleet  boardings_annual  punctuality_pct  crowding_index  cost_recovery_pct  subsidy_pkr_per_trip
+count   36.00000  36.000000  36.000000      3.600000e+01        36.000000       36.000000          36.000000             36.000000
+mean    27.02500  21.611111  37.777778      2.426569e+07       153.144444        0.926944          37.341667             28.158333
+std     10.46276   7.294921  18.001764      3.065424e+07       258.816984        0.189055          16.548446              9.637675
+min     11.00000   8.000000   6.000000      3.191272e+06        62.900000        0.400000           0.000000             12.900000
+25%     19.60000  15.000000  23.000000      7.296331e+06        68.375000        0.822500          28.450000             20.375000
+50%     24.30000  22.500000  38.500000      1.229095e+07        76.150000        0.950000          37.950000             28.200000
+75%     37.10000  27.250000  52.000000      2.823374e+07        85.200000        1.072500          48.075000             34.650000
+max     47.10000  33.000000  69.000000      1.381480e+08       999.000000        1.320000          66.300000             50.900000
+Missing per column: {'route_id': 0, 'mode': 0, 'corridor': 0, 'length_km': 0, 'stops': 0, 'fleet': 0, 'districts_served': 0, 'boardings_annual': 0, 'punctuality_pct': 0, 'crowding_index': 0, 'cost_recovery_pct': 0, 'subsidy_pkr_per_trip': 0}
+Exact duplicate rows: 0
+
+RAW ridership_daily rows 2159
+date               object
+mode               object
+trips_scheduled     int64
+trips_operated      int64
+trips_on_time       int64
+boardings           int64
+delay_minutes       int64
+Numeric ranges and denominator audit:
+        trips_scheduled  trips_operated  trips_on_time     boardings  delay_minutes
+count      2159.000000     2159.000000    2159.000000  2.159000e+03    2159.000000
+mean       2839.138953     2796.498379    2230.010653  5.731695e+05    6222.435387
+std        2631.426610     2593.430062    1862.543734  3.706871e+05    8438.765661
+min         175.000000      170.000000     137.000000  2.870600e+04     171.000000
+25%        1041.500000     1021.000000     984.500000  3.877275e+05     636.500000
+50%        1958.000000     1920.000000    1750.000000  6.131600e+05    1804.000000
+75%        4769.000000     4769.000000    3513.000000  7.354905e+05   12973.000000
+max        9479.000000     9428.000000    7069.000000  1.460461e+06   32900.000000
+Missing per column: {'date': 0, 'mode': 0, 'trips_scheduled': 0, 'trips_operated': 0, 'trips_on_time': 0, 'boardings': 0, 'delay_minutes': 0}
+Exact duplicate rows: 23
+
+RAW fare_revenue rows 288
+month          object
+mode           object
+ticket_type    object
+trips           int64
+revenue_pkr     int64
+Numeric ranges and denominator audit:
+               trips   revenue_pkr
+count  2.880000e+02  2.880000e+02
+mean   6.486465e+06  2.546525e+08
+std    6.534305e+06  2.873349e+08
+min    5.694600e+04  2.271614e+06
+25%    1.425185e+06  5.893791e+07
+50%    3.024976e+06  1.049811e+08
+75%    1.186775e+07  4.026137e+08
+max    2.695075e+07  1.312697e+09
+Missing per column: {'month': 0, 'mode': 0, 'ticket_type': 0, 'trips': 0, 'revenue_pkr': 0}
+Exact duplicate rows: 0
+Register duplicate keys: 0
+GeoJSON key matches as filed: 22
+Register join keys: Uppercase and remove spaces; rows affected=2
+Outside federation: Exclude D00 overlapping capital territory from federation sum; rows affected=1
+Boarding scale: Multiply three thousand-unit entries by 1000; rounding uncertainty retained; rows affected=3
+Concession fraction: Multiply fractional entries by 100; rows affected=4
+Road sentinel: Replace with missing; rows affected=2
+GeoJSON join: matched 24 unmatched 0
+Clean denominator ranges: {'population': {'min': 468000, 'max': 10966000}, 'households': {'min': 76721, 'max': 1566571}, 'area_km2': {'min': 16745.7, 'max': 95677.6}}
+Mixed date formats: Parse slash dates as DD/MM/YYYY and ISO as YYYY-MM-DD explicitly; rows affected=385
+Month-first failures 230 silent reinterpretations 137
+Exact re-submissions: Keep one identical submission; rows affected=30
+Impossible daily counts: Preserve filed slot; mask all measurement columns on impossible row (no invented repairs); rows affected=7
+Filed rows 2129 span 2025-04-01 00:00:00 2026-09-30 00:00:00 slots 2192 never filed 63
+Missing by category: {'Ferry': 22, 'Bus': 19, 'Metro': 18, 'BRT': 4}
+Calendar audit BRT {'dtype_ok': True, 'monotonic': True, 'n_rows': 544, 'n_duplicated': 0, 'n_missing': 4, 'missing_dates': ['2025-08-28 00:00:00', '2025-11-04 00:00:00', '2026-01-04 00:00:00', '2026-07-11 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-30 00:00:00'), 'partial_tail': False, 'tail_period': '2026-09', 'tail_count': 30}
+Calendar audit Bus {'dtype_ok': True, 'monotonic': True, 'n_rows': 529, 'n_duplicated': 0, 'n_missing': 10, 'missing_dates': ['2025-09-23 00:00:00', '2025-09-28 00:00:00', '2025-10-16 00:00:00', '2025-11-18 00:00:00', '2025-11-28 00:00:00', '2025-12-24 00:00:00', '2026-01-13 00:00:00', '2026-05-30 00:00:00', '2026-06-06 00:00:00', '2026-07-23 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-21 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 21}
+Calendar audit Ferry {'dtype_ok': True, 'monotonic': True, 'n_rows': 526, 'n_duplicated': 0, 'n_missing': 13, 'missing_dates': ['2025-05-23 00:00:00', '2025-06-27 00:00:00', '2025-07-06 00:00:00', '2025-07-22 00:00:00', '2025-08-25 00:00:00', '2025-09-26 00:00:00', '2025-10-12 00:00:00', '2025-11-16 00:00:00', '2026-01-05 00:00:00', '2026-02-25 00:00:00', '2026-05-18 00:00:00', '2026-06-10 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-21 00:00:00'), 'partial_tail': True, 'tail_period': '2026-09', 'tail_count': 21}
+Calendar audit Metro {'dtype_ok': True, 'monotonic': True, 'n_rows': 530, 'n_duplicated': 0, 'n_missing': 18, 'missing_dates': ['2025-08-02 00:00:00', '2025-09-17 00:00:00', '2026-02-09 00:00:00', '2026-02-10 00:00:00', '2026-02-11 00:00:00', '2026-02-12 00:00:00', '2026-02-13 00:00:00', '2026-02-14 00:00:00', '2026-02-15 00:00:00', '2026-02-16 00:00:00', '2026-02-17 00:00:00', '2026-02-18 00:00:00'], 'span': ('2025-04-01 00:00:00', '2026-09-30 00:00:00'), 'partial_tail': False, 'tail_period': '2026-09', 'tail_count': 30}
+Route mode labels: Normalize brt and Bus Rapid Transit to BRT; rows affected=3
+punctuality_pct sentinel: Mask code as missing; do not impute; rows affected=3
+cost_recovery_pct sentinel: Mask code as missing; do not impute; rows affected=2
+ROUTE OVERLAP {'true_total': 873564820.0, 'attributed_total': 2704739571.0, 'factor': 3.096209358568263, 'units': 36, 'units_multi': 28, 'max_parts': 4, 'mean_parts': 2.5555555555555554, 'by_part': _part
+D17    555409884
+D09    413923744
+D24    295590072
+D23    190240451
+D08    159447616
+D21    153252159
+D13    143494730
+D15    138148022
+D12    118335772
+D20     98679594
+D11     92304409
+D03     86421839
+D22     63658276
+D19     45568816
+D02     43943268
+D05     39438364
+D10     37246107
+D14     14463422
+D18      8831497
+D01      6341529
+Name: boardings_annual, dtype: int64, 'exclusive': False}
+Route join misses: 0
+FARE RECONCILIATION trips {'parts_rows': 216, 'total_rows': 72, 'sum_parts': 934051014.0, 'sum_all': 1868102028.0, 'sum_all_pct': 200.0, 'mismatches': Empty DataFrame
+Columns: [parts, declared, diff, rel_pct]
+Index: [], 'worst_abs': 0.0, 'worst_rel_pct': 0.0, 'reconciles': True}
+FARE RECONCILIATION revenue_pkr {'parts_rows': 216, 'total_rows': 72, 'sum_parts': 36669953119.0, 'sum_all': 73339906238.0, 'sum_all_pct': 200.0, 'mismatches': Empty DataFrame
+Columns: [parts, declared, diff, rel_pct]
+Index: [], 'worst_abs': 0.0, 'worst_rel_pct': 0.0, 'reconciles': True}
+Fare summary rows: Exclude summaries from parts; retain summary separately; rows affected=72
+MODE COUNTS {'Bus': 22, 'BRT': 6, 'Metro': 4, 'Ferry': 4}
+CHANNEL PLAN {'conflicts': {}, 'redundant': {}, 'positional': {'x': ['period', 'component', 'month'], 'y': ['on_time_pct', 'percentage_points', 'index']}, 'channels_used': {'x': ['period', 'component', 'month'], 'y': ['on_time_pct', 'percentage_points', 'index'], 'lightness': ['boardings_per_1000_residents']}, 'ok': True}
+deutan simulation
+  #0072B2  ->  #3B67B1
+  #D55E00  ->  #9E8C00
+  #009E73  ->  #8A8676
+STATIC CHART PALETTE ['#3B67B1', '#9E8C00', '#8A8676']
+SCREEN MAP PALETTE actually used: ['#d3e4f3', '#9dcae1', '#549fcd', '#1e6db2', '#083a7a']
+deutan simulation
+  #d3e4f3  ->  #DAE0F3
+  #9dcae1  ->  #B5C0E1
+  #549fcd  ->  #7992CC
+  #1e6db2  ->  #3464B1
+  #083a7a  ->  #003779
+SCREEN MAP CVD ['#DAE0F3', '#B5C0E1', '#7992CC', '#3464B1', '#003779']
+SCREEN MAP worst all-pairs CVD distance: 10.007194951794062
+Screen line/bar ink: #0072B2 ; series use styles/text, no categorical hue mapping.
+Raw inputs preserved. Cleaning complete.

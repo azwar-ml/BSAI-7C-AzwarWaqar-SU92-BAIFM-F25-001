@@ -1,0 +1,28 @@
+{
+  "week": 6,
+  "python": "3.9.13",
+  "executed": [
+    "selfcheck.py",
+    "partA_process.py",
+    "partA_charts.py",
+    "partB_charts.py",
+    "partB_analytics.py",
+    "partA_dashboard.py",
+    "partC_experiment.py",
+    "partC_figure.py",
+    "partD_figure.py",
+    "generate_partE_pdf.py"
+  ],
+  "raw_sha256": {
+    "data\\DATA_DICTIONARY.md": "7f380a1e63f004880a623cfd59c88a71242b6ac44ac4e27b414049c98b679b03",
+    "data\\district_grid.csv": "a6b81354becfc56219c9162059c62f74b0b8cc71180350c9d0dc6265c4d7f602",
+    "data\\generation_mix.csv": "c3255f52bf4333c6b21c46cbc33f80b8563bd6c54426a5c410e67af4115113b6",
+    "data\\grid_daily.csv": "93868f0260bb4b6e771fd14789c29c03fc877f7956b83a77b40c235da8f59e7b",
+    "data\\regions.geojson": "ee83359b52a5cde4d109aca57d2a1712849693c3dc7eb12fca4c9d5f6fc96d48"
+  },
+  "raw_unchanged": true,
+  "png_dpi": 300,
+  "pdf_pages": 1,
+  "offline_html": "partA_dashboard.html",
+  "human_trials": "not performed or claimed"
+}

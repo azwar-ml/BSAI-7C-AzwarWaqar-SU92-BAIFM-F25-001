@@ -1,0 +1,4 @@
+*.pdf binary
+*.png binary
+*.zip binary
+week[67]/assignments/*.html whitespace=-blank-at-eol

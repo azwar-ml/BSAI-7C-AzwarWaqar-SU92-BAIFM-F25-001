@@ -1,0 +1,61 @@
+PASS districts: 24 (expected 24, tolerance 0)
+PASS population: 57857000 (expected 57857000, tolerance 0)
+PASS households: 8908512 (expected 8908512, tolerance 0)
+PASS top-list intersection: 1 (expected 1, tolerance 0)
+Raw-count top three: ['D17', 'D09', 'D13']
+Rate top three: ['D12', 'D21', 'D09']
+PASS count-population correlation: 0.9452362556700068 (expected 0.945, tolerance 0.0005)
+PASS rate-population correlation: 0.24942801108142315 (expected 0.249, tolerance 0.0005)
+Rate range 4683.425373134329 30655.147038327526 pooled 15098.676564633493
+PASS top-five population share: 59.88039476640683 (expected 59.9, tolerance 0.05)
+PASS top-five area share: 12.593402078172483 (expected 12.6, tolerance 0.05)
+PASS register annual boardings: 873564130 (expected 873564130, tolerance 0)
+PASS route annual boardings: 873564820 (expected 873564820, tolerance 0)
+PASS attributed route boardings: 2704739571.0 (expected 2704739571, tolerance 0)
+PASS overlap: 3.096209358568263 (expected 3.096, tolerance 0.0005)
+PASS punctuality usable: 33 (expected 33, tolerance 0)
+PASS road usable: 22 (expected 22, tolerance 0)
+PASS fare journeys: 934051014 (expected 934051014, tolerance 0)
+PASS fare revenue: 36669953119 (expected 36669953119, tolerance 0)
+PASS route mode count: 4 (expected 4, tolerance 0)
+PASS concession min: 20.9 (expected 20.9, tolerance 0.001)
+PASS concession max: 42.6 (expected 42.6, tolerance 0.001)
+PASS fare mean PKR: 39.25904749245313 (expected 39.3, tolerance 0.05)
+Annual boardings under impossible-row masking policy: 844094143.0 ; coverage % 96.62646553493445
+PASS filed annual boardings anchor (before invalid masking): 845531940 (expected 845531940, tolerance 0)
+Excluded impossible-row boardings, annual: 1437797.0
+PASS boardings per journey: 1.3013824917275878 (expected 1.303, tolerance 0.0021)
+PASS rate_before: 78.8724792361417 (expected 78.87, tolerance 0.005)
+PASS rate_after: 80.59754772621449 (expected 80.6, tolerance 0.005)
+PASS change: 1.7250684900727862 (expected 1.73, tolerance 0.005)
+PASS within: -1.0964261848437187 (expected -1.1, tolerance 0.005)
+PASS mix: 2.821494674916516 (expected 2.82, tolerance 0.005)
+       rate_before  rate_after     delta  share_before  share_after  share_delta
+mode
+BRT      88.093237   87.242873 -0.850364     15.087126    18.350044     3.262918
+Bus      74.238110   73.135781 -1.102328     71.639342    57.607533   -14.031809
+Ferry    80.972498   79.777726 -1.194772      2.373687     2.234466    -0.139220
+Metro    96.111592   94.800795 -1.310797     10.899846    21.807957    10.908111
+Sensitivity first/last complete months 3 {'rate_before': 78.8724792361417, 'rate_after': 80.88987150842152, 'change': 2.017392272279821, 'within': -1.3817827017856312, 'mix': 3.3991749740654473, 'reversal': True, 'per': 100.0, 'groups':        rate_before  rate_after  ...  share_after  share_delta
+mode                            ...
+BRT      88.093237   86.790580  ...    19.191028     4.103902
+Bus      74.238110   72.888041  ...    54.624196   -17.015146
+Ferry    80.972498   79.320100  ...     2.257624    -0.116063
+Metro    96.111592   94.572940  ...    23.927152    13.027306
+
+[4 rows x 6 columns]}
+Sensitivity first/last complete months 6 {'rate_before': 79.09597437810419, 'rate_after': 80.61275099967689, 'change': 1.5167766215727028, 'within': -1.0962161127119527, 'mix': 2.6129927342846537, 'reversal': True, 'per': 100.0, 'groups':        rate_before  rate_after  ...  share_after  share_delta
+mode                            ...
+BRT      88.074134   87.087110  ...    18.599598     3.038082
+Bus      74.112927   73.031671  ...    56.962135   -13.005334
+Ferry    80.808232   79.671812  ...     2.270033    -0.088122
+Metro    96.011853   94.756863  ...    22.168234    10.055374
+
+[4 rows x 6 columns]}
+PASS trips growth pct: 12.131376169193198 (expected 12.1, tolerance 0.05)
+PASS revenue_pkr growth pct: 26.86652417380746 (expected 26.9, tolerance 0.05)
+Journey growth by mode %: {'BRT': 8.284086677976866, 'Bus': -39.12182947272612, 'Ferry': -23.437796758648023, 'Metro': 99.54806328907767}
+Final shares journeys: {'BRT': 24.91464323609824, 'Bus': 23.48506976101958, 'Ferry': 2.1574995725772688, 'Metro': 49.44278743030491}
+Final shares revenue: {'BRT': 22.888336744146496, 'Bus': 14.838536311964766, 'Ferry': 3.4368051208859183, 'Metro': 58.83632182300283}
+Average fare change PKR: 4.798970758830258 within-mode fare/product-yield 0.23776357467759232 mode mix 4.561207184152659
+Yield includes ticket-product mix; these files do not establish a causal tariff increase.

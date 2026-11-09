@@ -1,0 +1,7 @@
+# Interaction contract
+
+Default: all four modes show daily filed boardings from April 2025 through August 2026; gaps are unknown and not zero. Direct trace names, hover values and line patterns in the static default prevent reliance on hue identity. The static PNG uses the same date domain and measures.
+
+The menu chooses one mode; Reset: all restores every trace. Legend clicks hide or restore modes, and double-clicking an axis restores the complete date extent. The range slider and drag zoom change the visible dates only, never the data, denominator, or aggregation. Hover reports the exact date, mode and boarding count. Daily counts remain daily at every zoom level. The missing February 9-22, 2026 mode-reporting interval is shaded and missing values break lines; impossible returns also remain gaps. September 2026 is outside the selectable data domain because two modes stopped reporting.
+
+A short zoom must not invite a claim that missing service was zero or that a selected period was complete. Persistent warnings and broken lines guard that inference. No district filter is offered: summing whole-route boardings over served districts would inflate the network total 3.096 times. Modes are exclusive; their valid daily counts may be summed only when all four have reported. Reset restores visibility and the axis reset restores the original date window. The HTML embeds Plotly for offline use. No human-reader trials or optional five-person bonus are claimed.
